@@ -174,6 +174,55 @@ async def search_jobs():
 asyncio.run(search_jobs())
 ```
 
+### Recommended Jobs Scraper (New)
+
+A powerful scraper for LinkedIn's "Recommended for you" collections, including "Top Applicant", "Easy Apply", and various industry categories.
+
+**Features:**
+- **Multiple Collections**: Support for `recommended`, `easy-apply`, `top-applicant`, and 30+ industry categories.
+- **Deep Extraction (`--details`)**: Extracts full job description, hiring team, and **Premium AI Match Analysis**.
+- **Smart Pagination**: Automatically handles incremental scrolling and pagination to fetch all jobs.
+- **Robustness**: Retries, error handling, and session management.
+
+**Usage:**
+
+1. **Basic Scrape** (Fast - title, company, location, easy apply status):
+```bash
+# Scrape 20 "Top Applicant" jobs
+python3 samples/scrape_recommended_jobs.py -c top-applicant -l 20 --pages 2
+```
+
+2. **Detailed Scrape** (Slower - adds description, hiring team, **Premium Match Analysis**):
+```bash
+# Scrape 10 "Easy Apply" jobs with full details
+python3 samples/scrape_recommended_jobs.py -c easy-apply -l 10 --details
+```
+
+**Key Arguments:**
+- `-c`, `--collection`: Collection to scrape (e.g., `recommended`, `top-applicant`, `easy-apply`, `technology`, `remote`).
+- `-l`, `--limit`: Max number of jobs to collect (default: 25).
+- `-p`, `--pages`: Max number of pages to traverse (default: 1).
+- `-d`, `--details`: **Enable deep extraction** (Description, Hiring Team, Premium Match).
+- `--headless`: Run browser in background.
+
+**Output:**
+Saves results to a JSON file (e.g., `top-applicant_jobs.json`) containing rich data:
+```json
+{
+  "title": "Senior Engineer",
+  "company": "Tech Corp",
+  "easy_apply": true,
+  "actively_hiring": true,
+  "description": "Full job description...",
+  "hiring_team": [{"name": "Jane Doe", "title": "Recruiter", "connection_degree": "2nd"}],
+  "match_analysis": {
+    "summary": "Job match is strong",
+    "matched_qualifications": ["Python", "AWS"],
+    "missing_qualifications": ["Docker"]
+  }
+}
+```
+
 ## Authentication
 
 LinkedIn requires authentication. You need to create a session file first:

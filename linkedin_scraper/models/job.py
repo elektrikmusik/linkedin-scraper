@@ -1,7 +1,55 @@
 """Pydantic models for LinkedIn Job data."""
 
-from typing import Optional, Dict, Any
+
+from typing import Optional, List, Dict, Any
 from pydantic import BaseModel, field_validator
+
+class HiringTeamMember(BaseModel):
+    """Member of the hiring team."""
+    name: Optional[str] = None
+    profile_url: Optional[str] = None
+    title: Optional[str] = None
+    connection_degree: Optional[str] = None
+    is_job_poster: bool = False
+    mutual_connections: Optional[str] = None
+
+class MatchAnalysis(BaseModel):
+    """Premium AI match analysis."""
+    summary: Optional[str] = None
+    matched_qualifications: List[str] = []
+    missing_qualifications: List[str] = []
+    total_required: Optional[int] = None
+    total_matched: Optional[int] = None
+    raw_text: Optional[str] = None
+
+class RecommendedJob(BaseModel):
+    """
+    Job listing from recommended collections (Top Applicant, Easy Apply, etc.).
+    Similar to Job but tailored for the collection scraper data structure.
+    """
+    job_id: str
+    job_url: str
+    collection: str
+    title: Optional[str] = None
+    company: Optional[str] = None
+    company_url: Optional[str] = None
+    location: Optional[str] = None
+    posted_time: Optional[str] = None
+    employment_type: Optional[str] = None
+    workplace_type: Optional[str] = None
+    promoted: bool = False
+    easy_apply: bool = False
+    actively_hiring: bool = False
+    description: Optional[str] = None
+    hiring_team: Optional[List[HiringTeamMember]] = None
+    match_analysis: Optional[MatchAnalysis] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        return self.model_dump()
+    
+    def to_json(self, **kwargs) -> str:
+        return self.model_dump_json(**kwargs)
+
 
 
 class Job(BaseModel):
